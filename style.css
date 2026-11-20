@@ -1,0 +1,105 @@
+/* Style du site — séparé de la structure (index.html) pour pouvoir changer le design sans toucher au contenu. */
+
+:root {
+  --bg: #fafaf7;
+  --fg: #161616;
+  --muted: #5c5c57;
+  --line: #dcdcd4;
+  --accent: #d4401f;
+  --max: 720px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #f2f2ee;
+    --muted: #a3a39c;
+    --line: #2e2e2b;
+    --accent: #ff6a45;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.6;
+}
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Navigation */
+.top { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.top nav {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  font-family: system-ui, sans-serif; font-size: .9rem;
+}
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover { color: var(--accent); }
+
+/* Accueil */
+.hero { padding: 96px 0 72px; }
+.kicker {
+  font-family: system-ui, sans-serif;
+  letter-spacing: .14em; text-transform: uppercase;
+  font-size: .8rem; color: var(--muted); margin: 0 0 16px;
+}
+h1 {
+  font-size: clamp(2.4rem, 9vw, 4rem);
+  line-height: 1.04; margin: 0 0 24px;
+}
+.lead { font-size: 1.25rem; line-height: 1.55; color: var(--muted); margin: 0 0 32px; max-width: 34em; }
+
+.cta {
+  font-family: system-ui, sans-serif;
+  display: inline-block; padding: 12px 22px;
+  border: 2px solid var(--accent); color: var(--accent);
+  text-decoration: none; font-weight: 600;
+}
+.cta:hover { background: var(--accent); color: var(--bg); }
+
+/* Sections */
+section { padding: 64px 0; border-top: 1px solid var(--line); }
+h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.15; margin: 0 0 28px; }
+section p { margin: 0 0 18px; }
+
+/* Expertise */
+.expertise { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+.expertise strong { display: block; margin-bottom: 2px; }
+.expertise span { color: var(--muted); }
+
+/* Parcours */
+.job h3 { font-size: 1.25rem; margin: 0 0 4px; }
+.meta { font-family: system-ui, sans-serif; font-size: .9rem; color: var(--muted); margin: 0 0 20px; }
+.job h4 {
+  font-family: system-ui, sans-serif; font-size: .8rem;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin: 24px 0 8px;
+}
+.job ul { margin: 0; padding-left: 20px; }
+.job li { margin-bottom: 8px; }
+.more { margin-top: 36px; font-family: system-ui, sans-serif; font-size: .95rem; }
+
+.formation { margin-top: 40px; font-family: system-ui, sans-serif; font-size: .95rem; color: var(--muted); }
+.formation strong { color: var(--fg); }
+
+/* Contact + pied de page */
+.contact-text { font-size: 1.15rem; color: var(--muted); }
+footer { padding: 32px 0 48px; border-top: 1px solid var(--line); font-family: system-ui, sans-serif; font-size: .85rem; color: var(--muted); }
+
+@media (max-width: 480px) {
+  .hero { padding: 64px 0 48px; }
+  section { padding: 48px 0; }
+}
