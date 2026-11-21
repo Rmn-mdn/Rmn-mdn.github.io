@@ -142,15 +142,57 @@
         </ul>
 
         <h4>Résultats pendant ma mission, dans un marché crypto en forte croissance</h4>
-        <ul class="metrics">
-          <li><span class="n">50k → 90k</span><span class="l">Twitter</span></li>
-          <li><span class="n">70k → 91k</span><span class="l">YouTube</span></li>
-          <li><span class="n">5 360 → 9 200</span><span class="l">Discord</span></li>
-          <li><span class="n">470 → 4 660</span><span class="l">Telegram</span></li>
-          <li><span class="n">590 → 10,8k</span><span class="l">Twitch</span></li>
-          <li><span class="n">15k → 22k</span><span class="l">Groupe Facebook</span></li>
-          <li><span class="n">15k → 21k</span><span class="l">Page Facebook</span></li>
-          <li><span class="n">1 430 → 2 600</span><span class="l">LinkedIn</span></li>
+        <!-- Chiffres animés (script en bas de page). Pour ajouter un logo avant un libellé :
+             <img class="ico" src="icons/nom.svg" alt="" width="20" height="20"> -->
+        <ul class="metrics" id="metrics">
+          <li data-from="50000" data-to="90000" data-fmt="k0">
+            <span class="n" aria-hidden="true">90k</span>
+            <span class="l">Twitter (X) · abonnés</span>
+            <span class="from">départ : 50k</span>
+            <span class="sr">Twitter (X), abonnés : de 50k à 90k</span>
+          </li>
+          <li data-from="70000" data-to="91000" data-fmt="k0">
+            <span class="n" aria-hidden="true">91k</span>
+            <span class="l">YouTube · abonnés</span>
+            <span class="from">départ : 70k</span>
+            <span class="sr">YouTube, abonnés : de 70k à 91k</span>
+          </li>
+          <li data-from="5360" data-to="9200" data-fmt="int">
+            <span class="n" aria-hidden="true">9 200</span>
+            <span class="l">Discord · membres</span>
+            <span class="from">départ : 5 360</span>
+            <span class="sr">Discord, membres : de 5 360 à 9 200</span>
+          </li>
+          <li data-from="470" data-to="4660" data-fmt="int">
+            <span class="n" aria-hidden="true">4 660</span>
+            <span class="l">Telegram · membres</span>
+            <span class="from">départ : 470</span>
+            <span class="sr">Telegram, membres : de 470 à 4 660</span>
+          </li>
+          <li data-from="590" data-to="10800" data-fmt="k1">
+            <span class="n" aria-hidden="true">10,8k</span>
+            <span class="l">Twitch · abonnés</span>
+            <span class="from">départ : 590</span>
+            <span class="sr">Twitch, abonnés : de 590 à 10,8k</span>
+          </li>
+          <li data-from="15000" data-to="22000" data-fmt="k0">
+            <span class="n" aria-hidden="true">22k</span>
+            <span class="l">Groupe Facebook · membres</span>
+            <span class="from">départ : 15k</span>
+            <span class="sr">Groupe Facebook, membres : de 15k à 22k</span>
+          </li>
+          <li data-from="15000" data-to="21000" data-fmt="k0">
+            <span class="n" aria-hidden="true">21k</span>
+            <span class="l">Page Facebook · abonnés</span>
+            <span class="from">départ : 15k</span>
+            <span class="sr">Page Facebook, abonnés : de 15k à 21k</span>
+          </li>
+          <li data-from="1430" data-to="2600" data-fmt="int">
+            <span class="n" aria-hidden="true">2 600</span>
+            <span class="l">LinkedIn · abonnés</span>
+            <span class="from">départ : 1 430</span>
+            <span class="sr">LinkedIn, abonnés : de 1 430 à 2 600</span>
+          </li>
         </ul>
       </article>
 
@@ -188,5 +230,57 @@
   <div class="wrap">© 2026 Romain Mesdon</div>
 </footer>
 
+<script>
+/* Animation des chiffres : compte de la valeur de départ à la valeur finale quand la grille entre à l'écran.
+   Sans JavaScript, ou si le visiteur réduit les animations, les valeurs finales restent affichées. */
+(function () {
+  var list = document.getElementById('metrics');
+  if (!list || !('IntersectionObserver' in window)) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var items = Array.prototype.slice.call(list.querySelectorAll('li'));
+  var thin = '\u202F'; /* espace fine insécable pour les milliers */
+
+  function fmt(v, mode) {
+    v = Math.round(v);
+    if (mode === 'k0' && v >= 1000) return Math.round(v / 1000) + 'k';
+    if (mode === 'k1' && v >= 1000) return (Math.round(v / 100) / 10).toString().replace('.', ',') + 'k';
+    return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thin);
+  }
+
+  items.forEach(function (li) {
+    li.querySelector('.n').textContent = fmt(Number(li.getAttribute('data-from')), li.getAttribute('data-fmt'));
+  });
+  list.classList.add('is-ready');
+
+  function run(li, delay) {
+    var from = Number(li.getAttribute('data-from'));
+    var to = Number(li.getAttribute('data-to'));
+    var mode = li.getAttribute('data-fmt');
+    var n = li.querySelector('.n');
+    var duration = 1800;
+    setTimeout(function () {
+      li.classList.add('is-on');
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        n.textContent = fmt(from + (to - from) * eased, mode);
+        if (p < 1) { requestAnimationFrame(step); } else { n.textContent = fmt(to, mode); }
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  }
+
+  var observer = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) {
+      items.forEach(function (li, i) { run(li, i * 90); });
+      observer.disconnect();
+    }
+  }, { threshold: 0.3 });
+  observer.observe(list);
+})();
+</script>
 </body>
 </html>
