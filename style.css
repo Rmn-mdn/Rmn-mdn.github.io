@@ -80,7 +80,18 @@ section p { margin: 0 0 18px; }
 .expertise strong { display: block; margin-bottom: 2px; }
 .expertise span { color: var(--muted); }
 
+/* Réalisation phare : chiffres */
+.metrics {
+  list-style: none; padding: 0; margin: 28px 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;
+}
+.metrics li { border-top: 2px solid var(--accent); padding-top: 10px; }
+.metrics .n { display: block; font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+.metrics .l { font-family: system-ui, sans-serif; font-size: .85rem; color: var(--muted); }
+.note { font-family: system-ui, sans-serif; font-size: .9rem; color: var(--muted); }
+
 /* Parcours */
+.job { margin-bottom: 56px; }
 .job h3 { font-size: 1.25rem; margin: 0 0 4px; }
 .meta { font-family: system-ui, sans-serif; font-size: .9rem; color: var(--muted); margin: 0 0 20px; }
 .job h4 {
@@ -90,7 +101,13 @@ section p { margin: 0 0 18px; }
 }
 .job ul { margin: 0; padding-left: 20px; }
 .job li { margin-bottom: 8px; }
-.more { margin-top: 36px; font-family: system-ui, sans-serif; font-size: .95rem; }
+
+.earlier { font-family: system-ui, sans-serif; font-size: .95rem; color: var(--muted); }
+.earlier strong { color: var(--fg); }
+.earlier ul { margin: 8px 0 0; padding-left: 20px; }
+.earlier li { margin-bottom: 6px; }
+
+.more { margin-top: 28px; font-family: system-ui, sans-serif; font-size: .95rem; }
 
 .formation { margin-top: 40px; font-family: system-ui, sans-serif; font-size: .95rem; color: var(--muted); }
 .formation strong { color: var(--fg); }
