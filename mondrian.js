@@ -157,9 +157,23 @@
     observer.observe(list);
   }
 
+  /* 7. Contact : assemble l'adresse e-mail côté navigateur (pas écrite en clair dans le HTML),
+        affiche un bouton « Écrire un e-mail » et l'adresse en texte à copier. */
+  function contactMail() {
+    var cta = document.getElementById('mail-cta');
+    var txt = document.getElementById('mail-text');
+    if (!cta || !txt) return;
+    var address = ['fait.mesdon', 'gmail.com'].join('@');
+    cta.href = 'mailto:' + address;
+    cta.hidden = false;
+    txt.textContent = address;
+    txt.hidden = false;
+  }
+
   /* Navigation active et progression restent utiles même sans animation ; le reste est coupé si "réduire les animations". */
   trackActiveSection();
   readingProgress();
+  contactMail();
   if (reduce) return;
   buildHero();
   revealOnScroll();
