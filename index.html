@@ -10,9 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="mondrian.css">
+<script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
+<div class="progress" aria-hidden="true"></div>
 
 <header class="top">
   <div class="wrap">
@@ -28,21 +30,21 @@
 <main>
 
   <section class="hero" style="border-top:0">
-    <div class="wrap">
-      <p class="kicker">Responsable communication &amp; marketing</p>
-      <h1>Romain<br>Mesdon</h1>
-      <div class="hero-grid">
-        <div>
-          <p class="lead">Je transforme les enjeux business en dispositifs marketing opérationnels, de la stratégie de marque au déploiement.</p>
-          <a class="cta" href="#contact">Me contacter</a>
-        </div>
-        <!-- Portrait : décommenter et remplacer par ta photo (fichier dans /img, 800 px de large max)
-        <img class="portrait" src="img/portrait.jpg" alt="Portrait de Romain Mesdon" width="400" height="500"> -->
-        <a class="blk" href="#parcours">
-          <b>50k → 90k</b>
-          <span>abonnés Twitter (X) · Journal du Coin · 2021</span>
-        </a>
+    <div class="mond" id="mond">
+      <div class="cell c-name" style="--i:0">
+        <p class="kicker">Responsable communication &amp; marketing</p>
+        <h1>Romain<br>Mesdon</h1>
       </div>
+      <div class="cell c-red" style="--i:1" aria-hidden="true"></div>
+      <div class="cell c-lead" style="--i:2">
+        <p class="lead">Je transforme les enjeux business en dispositifs marketing opérationnels, de la stratégie de marque au déploiement.</p>
+        <a class="cta" href="#contact">Me contacter</a>
+      </div>
+      <div class="cell c-yellow" style="--i:3" aria-hidden="true"></div>
+      <a class="cell c-blue" style="--i:4" href="#parcours">
+        <b>50k → 90k</b>
+        <span>abonnés Twitter (X) · Journal du Coin · 2021</span>
+      </a>
     </div>
   </section>
 
@@ -234,57 +236,6 @@
   <div class="wrap">© 2026 Romain Mesdon</div>
 </footer>
 
-<script>
-/* Animation des chiffres : compte de la valeur de départ à la valeur finale quand la grille entre à l'écran.
-   Sans JavaScript, ou si le visiteur réduit les animations, les valeurs finales restent affichées. */
-(function () {
-  var list = document.getElementById('metrics');
-  if (!list || !('IntersectionObserver' in window)) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var items = Array.prototype.slice.call(list.querySelectorAll('li'));
-  var thin = '\u202F'; /* espace fine insécable pour les milliers */
-
-  function fmt(v, mode) {
-    v = Math.round(v);
-    if (mode === 'k0' && v >= 1000) return Math.round(v / 1000) + 'k';
-    if (mode === 'k1' && v >= 1000) return (Math.round(v / 100) / 10).toString().replace('.', ',') + 'k';
-    return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thin);
-  }
-
-  items.forEach(function (li) {
-    li.querySelector('.n').textContent = fmt(Number(li.getAttribute('data-from')), li.getAttribute('data-fmt'));
-  });
-  list.classList.add('is-ready');
-
-  function run(li, delay) {
-    var from = Number(li.getAttribute('data-from'));
-    var to = Number(li.getAttribute('data-to'));
-    var mode = li.getAttribute('data-fmt');
-    var n = li.querySelector('.n');
-    var duration = 1800;
-    setTimeout(function () {
-      li.classList.add('is-on');
-      var start = null;
-      function step(ts) {
-        if (start === null) start = ts;
-        var p = Math.min((ts - start) / duration, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        n.textContent = fmt(from + (to - from) * eased, mode);
-        if (p < 1) { requestAnimationFrame(step); } else { n.textContent = fmt(to, mode); }
-      }
-      requestAnimationFrame(step);
-    }, delay);
-  }
-
-  var observer = new IntersectionObserver(function (entries) {
-    if (entries[0].isIntersecting) {
-      items.forEach(function (li, i) { run(li, i * 90); });
-      observer.disconnect();
-    }
-  }, { threshold: 0.3 });
-  observer.observe(list);
-})();
-</script>
+<script src="mondrian.js" defer></script>
 </body>
 </html>
