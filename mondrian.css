@@ -1,0 +1,181 @@
+/* Direction « Mondrian » : grille orthogonale, filets noirs épais, aplats rouge / bleu / jaune.
+   Inspiration de la palette et du vocabulaire graphique, sans reproduction d'une composition existante.
+   Les animations sont dans mondrian.js ; ici, tout ce qui est animé est enveloppé dans
+   @media (prefers-reduced-motion: no-preference) pour respecter les visiteurs qui réduisent les animations. */
+
+:root {
+  --bg: #f4f3ee;
+  --ink: #0a0a0a;
+  --muted: #53534e;
+  --red: #d9201f;
+  --blue: #1d4f9c;
+  --yellow: #f7c600;
+  --rule: 6px;                 /* épaisseur des gros filets */
+  --max: 1040px;
+  --font: "Archivo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; color-scheme: light; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 1.05rem; line-height: 1.6; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+a { color: var(--blue); }
+a:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Barre de progression de lecture (pilotée par JS) */
+.progress { position: fixed; top: 0; left: 0; width: 100%; height: 5px; background: var(--red); transform: scaleX(0); transform-origin: left; z-index: 100; pointer-events: none; }
+
+/* Navigation : chaque lien est une cellule de la grille ; la section active se remplit de couleur */
+.top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: var(--rule) solid var(--ink); }
+.top nav { display: flex; flex-wrap: wrap; }
+.top nav a {
+  padding: 14px 22px; border-right: 3px solid var(--ink);
+  color: var(--ink); text-decoration: none;
+  font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  transition: background .2s, color .2s;
+}
+.top nav a:nth-child(1):hover, .top nav a:nth-child(1)[aria-current="true"] { background: var(--red); color: #fff; }
+.top nav a:nth-child(2):hover, .top nav a:nth-child(2)[aria-current="true"] { background: var(--blue); color: #fff; }
+.top nav a:nth-child(3):hover, .top nav a:nth-child(3)[aria-current="true"] { background: var(--yellow); }
+.top nav a:nth-child(4):hover, .top nav a:nth-child(4)[aria-current="true"] { background: var(--ink); color: #fff; }
+
+/* Accueil : composition de cellules. Le fond noir et l'espace entre cellules forment les filets. */
+.hero { padding: 0; border-bottom: var(--rule) solid var(--ink); }
+.mond {
+  --dx: 0;                                   /* -1 à 1, piloté par la souris */
+  display: grid; gap: var(--rule); background: var(--ink);
+  grid-template-columns: calc(50% + var(--dx) * 6%) calc(14% - var(--dx) * 3%) 1fr;
+  grid-template-rows: minmax(300px, 1fr) auto;
+  grid-template-areas: "name name red" "lead yellow blue";
+  min-height: min(82vh, 680px);
+}
+.cell { min-width: 0; }
+.c-name { grid-area: name; background: var(--bg); padding: 28px 28px 24px; display: flex; flex-direction: column; justify-content: flex-end; }
+.c-red { grid-area: red; background: var(--red); }
+.c-lead { grid-area: lead; background: var(--bg); padding: 24px 28px 28px; }
+.c-yellow { grid-area: yellow; background: var(--yellow); }
+.c-blue {
+  grid-area: blue; background: var(--blue); color: #fff; text-decoration: none;
+  padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-height: 180px;
+  transition: background .25s;
+}
+.c-blue:hover { background: var(--ink); }
+.c-blue b { font-size: clamp(2rem, 4.2vw, 3.2rem); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.c-blue span { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+.kicker { font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 12px; }
+h1 { font-size: clamp(2.8rem, 9vw, 7rem); font-weight: 900; line-height: .88; letter-spacing: -.035em; text-transform: uppercase; margin: 0; }
+.lead { font-size: clamp(1.1rem, 1.8vw, 1.35rem); font-weight: 500; line-height: 1.35; margin: 0 0 22px; max-width: 24em; }
+
+.cta {
+  display: inline-block; padding: 13px 24px; background: var(--ink); color: var(--bg);
+  text-decoration: none; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; font-size: .85rem;
+  transition: background .2s, color .2s;
+}
+.cta:hover { background: var(--red); color: #fff; }
+
+/* Sections */
+section { padding: 56px 0 64px; border-top: var(--rule) solid var(--ink); scroll-margin-top: 56px; }
+.hero { scroll-margin-top: 56px; }
+section p { margin: 0 0 18px; max-width: 40em; }
+h2 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; line-height: 1; letter-spacing: -.02em; text-transform: uppercase; margin: 0 0 32px; max-width: 16em; }
+h2::before { content: ""; display: block; width: 56px; height: 14px; background: var(--c, var(--red)); margin-bottom: 16px; transform-origin: left; }
+#portrait { --c: var(--red); }
+#expertise { --c: var(--blue); }
+#parcours { --c: var(--yellow); }
+#contact { --c: var(--ink); }
+#portrait .kicker, #expertise .kicker, #parcours .kicker { display: none; } /* le bloc de couleur remplace l'étiquette */
+
+/* Expertise : chaque cellule se remplit d'une couleur au survol */
+.expertise { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0; border-top: 3px solid var(--ink); border-left: 3px solid var(--ink); }
+.expertise li { border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink); padding: 20px 20px 24px; transition: background .25s, color .25s; }
+.expertise strong { display: block; font-weight: 800; font-size: 1.1rem; margin-bottom: 4px; }
+.expertise span { color: var(--muted); transition: color .25s; }
+.expertise li:nth-child(3n+1):hover, .expertise li:nth-child(3n+1):focus-within { background: var(--red); color: #fff; }
+.expertise li:nth-child(3n+2):hover, .expertise li:nth-child(3n+2):focus-within { background: var(--blue); color: #fff; }
+.expertise li:nth-child(3n):hover, .expertise li:nth-child(3n):focus-within { background: var(--yellow); color: var(--ink); }
+.expertise li:hover span, .expertise li:focus-within span { color: inherit; }
+
+/* Parcours : dates à gauche, contenu à droite */
+.job { margin-bottom: 64px; padding-top: 14px; border-top: 3px solid var(--ink); display: grid; grid-template-columns: 220px 1fr; gap: 0 36px; }
+.job > * { grid-column: 2; min-width: 0; }
+.job h3 { grid-row: 1; font-size: 1.35rem; font-weight: 800; line-height: 1.2; margin: 0 0 6px; }
+.job .meta { grid-column: 1; grid-row: 1; font-weight: 800; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; margin: 4px 0 0; }
+.job:nth-of-type(3n+1) .meta { color: var(--red); }
+.job:nth-of-type(3n+2) .meta { color: var(--blue); }
+.job:nth-of-type(3n) .meta { color: var(--ink); }
+.job h4 { font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 22px 0 8px; }
+.job ul { margin: 0; padding-left: 20px; max-width: 46em; }
+.job li { margin-bottom: 8px; }
+.job p { max-width: 46em; }
+
+/* Chiffres Journal du Coin : cellules colorées en alternance */
+.metrics { list-style: none; margin: 12px 0 0; padding: 0 !important; max-width: none !important; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 24px 20px; }
+.metrics li { position: relative; padding: 14px 10px 10px 0; margin: 0; transition: background .25s, color .25s, padding .25s; }
+.metrics li::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--c1, var(--red)); transform-origin: left; }
+.metrics li:nth-child(3n+1) { --c1: var(--red); }
+.metrics li:nth-child(3n+2) { --c1: var(--blue); }
+.metrics li:nth-child(3n) { --c1: var(--yellow); }
+.metrics li:hover { background: var(--c1); padding-left: 10px; }
+.metrics li:nth-child(3n+1):hover, .metrics li:nth-child(3n+2):hover { color: #fff; }
+.metrics li:hover .from { color: inherit; }
+.metrics .n { display: block; font-size: 1.7rem; font-weight: 900; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.metrics .l { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-top: 4px; }
+.metrics .from { display: block; font-size: .78rem; color: var(--muted); }
+.metrics .ico { height: 18px; width: 18px; vertical-align: -3px; margin-right: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.earlier { font-size: .95rem; color: var(--muted); }
+.earlier strong { color: var(--ink); }
+.earlier ul { margin: 8px 0 0; padding-left: 20px; }
+.earlier li { margin-bottom: 6px; }
+.more { margin-top: 28px; font-size: .95rem; }
+.formation { margin-top: 40px; font-size: .95rem; color: var(--muted); }
+.formation strong { color: var(--ink); }
+
+/* Contact : grand aplat jaune */
+#contact { background: var(--yellow); }
+.contact-text { font-size: 1.15rem; }
+#contact .kicker { color: var(--ink); }
+#contact .cta:hover { background: var(--red); }
+footer { padding: 24px 0 40px; background: var(--ink); color: #d7d6d0; font-size: .85rem; }
+
+/* Mobile : la composition s'empile */
+@media (max-width: 760px) {
+  .mond { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "name" "red" "lead" "blue" "yellow"; min-height: 0; }
+  .c-name { min-height: 220px; padding: 22px 20px; }
+  .c-red { min-height: 56px; }
+  .c-yellow { min-height: 44px; }
+  .c-lead { padding: 20px; }
+  .top .wrap { padding: 0; }
+  .top nav { flex-wrap: nowrap; }
+  .top nav a { padding: 13px 4px; flex: 1 1 0; text-align: center; font-size: .66rem; letter-spacing: .06em; }
+  .top nav a:last-child { border-right: 0; }
+  .job { grid-template-columns: 1fr; }
+  .job > *, .job h3, .job .meta { grid-column: 1; grid-row: auto; }
+  .job h3 { order: 1; }
+  .job .meta { order: 2; margin: 0 0 18px; }
+  .job > :not(h3):not(.meta) { order: 3; }
+  section { padding: 44px 0 48px; }
+}
+
+/* Animations : uniquement pour les visiteurs qui n'ont pas demandé à les réduire.
+   La classe .js (ajoutée dans <head>) évite de cacher du contenu si le JavaScript ne tourne pas. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Accueil : les cellules se « peignent » l'une après l'autre (révélation de gauche à droite) */
+  .js .mond .cell { clip-path: inset(0 100% 0 0); transition: clip-path .8s cubic-bezier(.7, 0, .2, 1); transition-delay: calc(var(--i, 0) * 120ms); }
+  .js .mond.is-built .cell { clip-path: inset(0 0 0 0); }
+
+  /* Défilement : les éléments montent en place, avec un léger décalage entre voisins */
+  .js [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--d, 0) * 70ms); }
+  .js [data-reveal].in { opacity: 1; transform: none; }
+  .js h2[data-reveal]::before { transform: scaleX(0); transition: transform .8s cubic-bezier(.7, 0, .2, 1) .25s; }
+  .js h2[data-reveal].in::before { transform: scaleX(1); }
+
+  /* Chiffres : le filet de couleur se trace pendant le comptage */
+  .metrics.is-ready li { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease, background .25s, color .25s, padding .25s; }
+  .metrics.is-ready li::before { transform: scaleX(0); transition: transform 1.8s cubic-bezier(.2, .7, .2, 1); }
+  .metrics.is-ready li.is-on { opacity: 1; transform: none; }
+  .metrics.is-ready li.is-on::before { transform: scaleX(1); }
+}
