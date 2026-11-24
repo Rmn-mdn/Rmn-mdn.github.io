@@ -163,6 +163,10 @@ h2::before { content: ""; display: block; width: 56px; height: 14px; background:
 .contact-text { font-size: 1.15rem; }
 #contact .kicker { color: var(--ink); }
 #contact .cta:hover { background: var(--red); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.cta.cta-alt { background: transparent; color: var(--ink); border: 3px solid var(--ink); padding: 10px 22px; }
+#contact .cta.cta-alt:hover { background: var(--ink); color: var(--yellow); }
+.mail-text { margin: 16px 0 0; font-weight: 700; user-select: all; }
 footer { padding: 24px 0 40px; background: var(--ink); color: #d7d6d0; font-size: .85rem; }
 
 /* Mobile : la composition s'empile */

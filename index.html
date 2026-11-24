@@ -235,8 +235,13 @@
       <p class="kicker">Contact</p>
       <h2>Échangeons.</h2>
       <p class="contact-text">Le plus simple pour me joindre :</p>
-      <!-- Pour ajouter une adresse email : <a class="cta" href="mailto:ton@adresse.fr">Écrire un email</a> -->
-      <a class="cta" href="https://www.linkedin.com/in/romain-mesdon-%F0%9F%8E%88-2373228b/">Me contacter sur LinkedIn</a>
+      <div class="cta-row">
+        <a class="cta" href="https://www.linkedin.com/in/romain-mesdon-%F0%9F%8E%88-2373228b/">Me contacter sur LinkedIn</a>
+        <!-- L'adresse e-mail est assemblée par mondrian.js (contactMail) pour limiter la collecte par les robots. -->
+        <a class="cta cta-alt" id="mail-cta" href="#contact" hidden>Écrire un e-mail</a>
+      </div>
+      <p class="mail-text" id="mail-text" hidden></p>
+      <noscript><p class="mail-text">Pour afficher l'adresse e-mail, activez JavaScript, ou contactez-moi sur LinkedIn.</p></noscript>
     </div>
   </section>
 
