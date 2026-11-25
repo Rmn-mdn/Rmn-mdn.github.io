@@ -1,5 +1,25 @@
 [
   {
+    "date": "2026-11-23",
+    "titre": "Le marché publicitaire français se transforme, le numérique creuse l'écart avec les médias historiques",
+    "source": "Siècle Digital",
+    "url": "https://siecledigital.fr/2026/11/23/le-marche-publicitaire-francais-se-transforme-le-numerique-creuse-lecart-avec-les-medias-historiques/",
+    "rubrique": "Marketing digital",
+    "langue": "FR",
+    "retenu": "Selon le baromètre BUMP, les recettes publicitaires nettes atteignent 13,2 Md€ sur neuf mois (+4,1 %). Le digital progresse de 10,2 % et pèse 66,3 % du total, tandis que les médias historiques reculent de 4,4 %, dont la télévision de 5,7 % et la presse de 5,6 %.",
+    "commentaire": "Le digital pèse désormais deux tiers du marché, quand les médias historiques reculent. Selon moi, ce rapport de force impose d'analyser où va réellement votre budget avant de le reconduire à l'identique."
+  },
+  {
+    "date": "2026-11-23",
+    "titre": "TikTok lance un nouvel outil pour détecter les deepfakes utilisant l'image de personnalités publiques",
+    "source": "Siècle Digital",
+    "url": "https://siecledigital.fr/2026/11/23/tiktok-lance-un-nouvel-outil-pour-detecter-les-deepfakes-utilisant-limage-de-personnalites-publiques/",
+    "rubrique": "Réseaux sociaux",
+    "langue": "FR",
+    "retenu": "Les personnalités publiques peuvent faire vérifier leur identité pour être alertées si leur visage est utilisé sans consentement. Le détecteur grand public ne reconnaît que les contenus produits avec les outils TikTok ou ByteDance. L'article cite l'AI Act, qui impose de signaler les contenus générés par IA.",
+    "commentaire": "Un détecteur limité aux contenus générés par les outils de la plateforme ne lève pas tous les doutes. Je défends donc la transparence à la source : indiquer clairement ce qui est généré par IA reste la protection la plus sûre pour une marque."
+  }
+  {
     "date": "2026-11-24",
     "titre": "Amazon achète des publicités sur ChatGPT tout en bloquant les robots d'OpenAI",
     "source": "Digiday",
