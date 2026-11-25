@@ -170,32 +170,46 @@
     txt.hidden = false;
   }
 
-  /* 8. Compétences (cellule rouge) : une compétence ouverte à la fois.
-        Un clic ouvre l'entrée choisie. L'enchaînement automatique repose sur l'animation CSS du filet jaune :
-        quand elle se termine (événement animationend), on ouvre l'entrée suivante. */
+  /* 8. Carrousel de compétences (cellule rouge) : une illustration à la fois.
+        Chaque scène active porte une animation CSS de 3,6 s ; quand elle se termine (événement animationend),
+        on affiche la scène suivante. Les points permettent de choisir une scène. */
   function skillsReel() {
     var reel = document.getElementById('reel');
     if (!reel) return;
-    var items = Array.prototype.slice.call(reel.children);
+    var slides = Array.prototype.slice.call(reel.querySelectorAll('.slide'));
+    var dots = Array.prototype.slice.call(reel.querySelectorAll('.dots button'));
 
     function show(index) {
-      items.forEach(function (li, i) {
-        var on = i === index;
-        li.classList.toggle('is-active', on);
-        li.querySelector('button').setAttribute('aria-expanded', on ? 'true' : 'false');
-      });
+      slides.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
+      dots.forEach(function (d, i) { d.setAttribute('aria-current', i === index ? 'true' : 'false'); });
     }
 
-    reel.addEventListener('click', function (e) {
-      var button = e.target.closest('button');
-      if (button) show(items.indexOf(button.parentNode));
-    });
+    dots.forEach(function (d, i) { d.addEventListener('click', function () { show(i); }); });
 
-    if (reduce) return; /* pas d'enchaînement automatique si le visiteur a demandé de réduire les animations */
+    if (reduce) return; /* pas de défilement automatique si le visiteur a demandé de réduire les animations */
     reel.addEventListener('animationend', function (e) {
-      if (e.animationName !== 'reel-fill') return;
-      show((items.indexOf(e.target) + 1) % items.length);
+      if (e.animationName !== 'reel-timer') return;
+      show((slides.indexOf(e.target) + 1) % slides.length);
     });
+  }
+
+  /* 9. Cellule bleue : affiche la dernière actualité de la veille (lue dans veille.json).
+        Si la lecture échoue, le texte écrit dans le HTML reste affiché. */
+  function latestVeille() {
+    var cell = document.getElementById('latest');
+    if (!cell || !window.fetch) return;
+    fetch('veille.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (items) {
+        if (!Array.isArray(items) || !items.length || !items[0].titre) return;
+        var it = items[0];
+        var d = new Date(it.date + 'T12:00:00');
+        var label = isNaN(d) ? '' : ' · ' + d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+        cell.querySelector('.kicker-s').textContent = 'Dernière veille' + label;
+        cell.querySelector('b').textContent = it.titre;
+        cell.querySelector('.latest-meta').textContent = (it.source || '') + (it.rubrique ? ' · ' + it.rubrique : '');
+      })
+      .catch(function () { /* on garde le texte par défaut */ });
   }
 
   /* Navigation active et progression restent utiles même sans animation ; le reste est coupé si "réduire les animations". */
@@ -203,6 +217,7 @@
   readingProgress();
   contactMail();
   skillsReel();
+  latestVeille();
   if (reduce) return;
   buildHero();
   revealOnScroll();
