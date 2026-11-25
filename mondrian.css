@@ -53,7 +53,25 @@ a:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
 }
 .cell { min-width: 0; }
 .c-name { grid-area: name; background: var(--bg); padding: 28px 28px 24px; display: flex; flex-direction: column; justify-content: flex-end; }
-.c-red { grid-area: red; background: var(--red); }
+.c-red { grid-area: red; background: var(--red); color: #fff; padding: 22px 26px; display: flex; flex-direction: column; justify-content: center; }
+.c-red .kicker { margin-bottom: 12px; }
+
+/* Liste de compétences : une entrée ouverte à la fois (voir mondrian.js, fonction skillsReel) */
+.reel { list-style: none; margin: 0; padding: 0; }
+.reel li { position: relative; border-top: 2px solid rgba(255, 255, 255, .4); }
+.reel li::after { content: ""; position: absolute; left: 0; top: -2px; width: 100%; height: 2px; background: var(--yellow); transform: scaleX(0); transform-origin: left; }
+.reel button { display: flex; gap: 14px; align-items: baseline; width: 100%; padding: 10px 0; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.reel button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.reel .num { min-width: 1.7em; font-size: .72rem; font-weight: 800; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
+.reel .ttl { font-size: 1.02rem; font-weight: 800; line-height: 1.15; transition: font-size .35s ease; }
+.reel .desc-wrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .4s ease; }
+.reel .desc { overflow: hidden; margin: 0; padding-left: calc(1.224rem + 14px); font-size: .92rem; line-height: 1.4; }
+.js .reel li:not(.is-active) .desc-wrap { grid-template-rows: 0fr; }
+.js .reel li:not(.is-active) .desc { visibility: hidden; }
+.reel li.is-active .ttl { font-size: clamp(1.3rem, 2.1vw, 1.85rem); font-weight: 900; }
+.reel li.is-active .num { color: var(--yellow); }
+.js .reel li.is-active::after { transform: scaleX(1); }
+.reel li.is-active .desc { padding-bottom: 12px; }
 .c-lead { grid-area: lead; background: var(--bg); padding: 24px 28px 28px; }
 .c-yellow { grid-area: yellow; background: var(--yellow); }
 .c-blue {
@@ -173,7 +191,7 @@ footer { padding: 24px 0 40px; background: var(--ink); color: #d7d6d0; font-size
 @media (max-width: 760px) {
   .mond { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "name" "red" "lead" "blue" "yellow"; min-height: 0; }
   .c-name { min-height: 220px; padding: 22px 20px; }
-  .c-red { min-height: 56px; }
+  .c-red { padding: 20px; }
   .c-yellow { min-height: 44px; }
   .c-lead { padding: 20px; }
   .top .wrap { padding: 0; }
@@ -194,6 +212,12 @@ footer { padding: 24px 0 40px; background: var(--ink); color: #d7d6d0; font-size
   /* Accueil : les cellules se « peignent » l'une après l'autre (révélation de gauche à droite) */
   .js .mond .cell { clip-path: inset(0 100% 0 0); transition: clip-path .8s cubic-bezier(.7, 0, .2, 1); transition-delay: calc(var(--i, 0) * 120ms); }
   .js .mond.is-built .cell { clip-path: inset(0 0 0 0); }
+
+  /* Compétences : le filet jaune se remplit, puis la compétence suivante s'ouvre (événement animationend).
+     Le survol ou le focus clavier met la lecture en pause. */
+  .js .reel li.is-active::after { animation: reel-fill 3.6s linear forwards; }
+  .reel:hover li.is-active::after, .reel:focus-within li.is-active::after { animation-play-state: paused; }
+  @keyframes reel-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
   /* Défilement : les éléments montent en place, avec un léger décalage entre voisins */
   .js [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--d, 0) * 70ms); }

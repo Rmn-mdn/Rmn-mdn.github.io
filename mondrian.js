@@ -170,10 +170,39 @@
     txt.hidden = false;
   }
 
+  /* 8. Compétences (cellule rouge) : une compétence ouverte à la fois.
+        Un clic ouvre l'entrée choisie. L'enchaînement automatique repose sur l'animation CSS du filet jaune :
+        quand elle se termine (événement animationend), on ouvre l'entrée suivante. */
+  function skillsReel() {
+    var reel = document.getElementById('reel');
+    if (!reel) return;
+    var items = Array.prototype.slice.call(reel.children);
+
+    function show(index) {
+      items.forEach(function (li, i) {
+        var on = i === index;
+        li.classList.toggle('is-active', on);
+        li.querySelector('button').setAttribute('aria-expanded', on ? 'true' : 'false');
+      });
+    }
+
+    reel.addEventListener('click', function (e) {
+      var button = e.target.closest('button');
+      if (button) show(items.indexOf(button.parentNode));
+    });
+
+    if (reduce) return; /* pas d'enchaînement automatique si le visiteur a demandé de réduire les animations */
+    reel.addEventListener('animationend', function (e) {
+      if (e.animationName !== 'reel-fill') return;
+      show((items.indexOf(e.target) + 1) % items.length);
+    });
+  }
+
   /* Navigation active et progression restent utiles même sans animation ; le reste est coupé si "réduire les animations". */
   trackActiveSection();
   readingProgress();
   contactMail();
+  skillsReel();
   if (reduce) return;
   buildHero();
   revealOnScroll();
